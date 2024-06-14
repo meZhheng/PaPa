@@ -49,9 +49,15 @@ class Roberta_Prototypical_BiGCN:
     
     def initialize_propagation_module(self, config) -> None:
         self.mask_pos = config.mask_pos
+        self.mode = config.ablation
 
         relPosEncoder = TimeAwareEncoder(config.emb_dim, config.train_aware_encoder)
         absTimeEncoder = TimeAwareEncoder(config.emb_dim, config.train_aware_encoder)
+
+        if self.mode == 'rm_tae':
+            relPosEncoder = None
+            absTimeEncoder = None
+
         self.BiGCN = BertBiGCN(config, relPosEncoder=relPosEncoder, absTimeEncoder=absTimeEncoder)
     
     def responseRanking(self, feature, rootIndex, ranking_indices):
@@ -169,8 +175,7 @@ class Roberta_Prototypical_BiGCN:
         return logits
         
     def forward(self, root_ids, root_mask, template_ids, template_mask,
-        edge_index_TD, edge_index_BU, roots, labels, abs_time, rel_pos, ranking_indices, post_feature,
-        mode = 'all'
+        edge_index_TD, edge_index_BU, roots, labels, abs_time, rel_pos, ranking_indices, post_feature
     ):  
         template_ids = template_ids.expand(root_ids.size(0), -1)
         template_mask = template_mask.expand(root_mask.size(0), -1)
@@ -180,27 +185,27 @@ class Roberta_Prototypical_BiGCN:
         propagation_mask = None
         learnable_emb = None
 
-        if mode == 'all':
+        if self.mode == 'all':
             propagation_emb = self.BiGCN(post_feature, edge_index_TD, edge_index_BU, roots, abs_time, rel_pos)
             learnable_emb = self.soft_prompt.weight
 
-        elif mode == 'rm_hard':
+        elif self.mode == 'rm_hard':
             propagation_emb = self.BiGCN(post_feature, edge_index_TD, edge_index_BU, roots, abs_time, rel_pos)
             learnable_emb = self.soft_prompt.weight
 
             template_ids = None
             template_mask = None
 
-        elif mode == 'rm_soft':
+        elif self.mode == 'rm_soft':
             propagation_emb = self.BiGCN(post_feature, edge_index_TD, edge_index_BU, roots, abs_time, rel_pos)
         
-        elif mode == 'rm_prompt':
+        elif self.mode == 'rm_prompt':
             propagation_emb = self.BiGCN(post_feature, edge_index_TD, edge_index_BU, roots, abs_time, rel_pos)
 
             template_ids = None
             template_mask = None
         
-        elif mode == 'rm_prop':
+        elif self.mode == 'rm_prop':
             learnable_emb = self.soft_prompt.weight
         
         propagation_emb, propagation_mask = self.responseRanking(propagation_emb, roots, ranking_indices)

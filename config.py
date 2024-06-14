@@ -8,7 +8,7 @@ class Config():
 		self.logging_dir = './logs'
 		self.save_at_last = False
 
-		self.ablation = 'all'
+		self.ablation = 'rm_soft'	# Optional[all, rm_soft, rm_hard, rm_prompt, rm_prop, rm_tae, rm_pro]
 
 		# GPU settings 
 		self.gpu = True
@@ -32,8 +32,6 @@ class Config():
 		self.include_time_interval = True
 
 		# Data paths
-		self.extension = "json"
-		self.data_split = ""
 		self.data_train = "data/Weibo" 	# Optional[Twitter15, Terrorist, Twitter, Weibo]
 		self.data_test = "data/WeiboCovid"	# Optional[Twitter16, Gossip, TwitterCovid, WeiboCovid]
 		
@@ -42,7 +40,7 @@ class Config():
 		self.dropout_rate = 0.3
 
 		# Learning rate
-		self.warmup_steps = 2485
+		self.warmup_steps = 2485		# Optional[4885 for PHEME, 2485 for Weibo]
 		self.learning_rate = 1e-5
 		self.adam_beta1 = 0.90
 		self.adam_beta2 = 0.98
@@ -50,7 +48,7 @@ class Config():
 
 		# Prompt Learning Framework
 		self.fix_layers = 0
-		self.n_tokens = 1
+		self.n_tokens = 50
 		self.template = '<s> Here is a piece of news with <mask> information.'
 		self.ranking = 'bfs'
 

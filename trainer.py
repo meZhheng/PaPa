@@ -29,6 +29,8 @@ class Trainer(transformers.Trainer):
         TIMESTAMP = "{0:%Y-%m-%dT%H-%M-%S/}".format(datetime.now())
         self.writer = SummaryWriter(os.path.join(self.config.logging_dir, TIMESTAMP))
         
+        self.optimizer = None
+        self.lr_scheduler = None
 
     def create_optimizer_and_scheduler(self, num_training_steps):
         
@@ -132,7 +134,7 @@ class Trainer(transformers.Trainer):
             root_ids, root_mask, 
             self.template_ids, self.template_mask,
             edge_index_FD, edge_index_BD, 
-            rootIndexs, labels, abs_time, rel_pos, ranking_indices, post_feature, mode=self.config.ablation
+            rootIndexs, labels, abs_time, rel_pos, ranking_indices, post_feature
         )
 
     def eval(self, model, epoch):

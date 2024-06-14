@@ -14,6 +14,6 @@ class TimeAwareEncoder(nn.Module):
 
 	def forward(self, pos):
 
-		aware_encoding = torch.sin(self.aware_weights * pos)
+		aware_encoding = torch.cos(self.aware_weights * pos)
 
 		return aware_encoding.t()

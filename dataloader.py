@@ -24,9 +24,9 @@ class PropDataset(Dataset):
                         continue
                     self.threadDict[thread['id_']] = thread
                     if self.train:
-                        if thread['label'] == '0':
+                        if int(thread['label']) == 0:
                             self.thread_false.append(thread['id_'])
-                        elif thread['label'] == '1':
+                        elif int(thread['label']) == 1:
                             self.thread_true.append(thread['id_'])
 
                 except EOFError:
@@ -172,8 +172,8 @@ class PropDataset(Dataset):
             rootIndexs.append(root_index)
 
             # <------------- label ------------->
-            label = thread['label']
-            labelList.append(0) if label == '1' else labelList.append(1)
+            label = int(thread['label'])
+            labelList.append(label)
 
             counter += len(post_feature)
         
