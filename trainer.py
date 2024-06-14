@@ -115,8 +115,9 @@ class Trainer(transformers.Trainer):
     
                 epoch_iterator.set_description(f"Epoch: {epoch+1} Step:{step+1}|{global_step} Lr: {scheduler.get_last_lr()[0]:.4e} Loss: {epoch_loss/(step+1):.4f}")
             
-            self.eval(model, epoch)
             self.writer.add_scalar('Training/Loss', epoch_loss/(step+1), epoch)
+
+        self.eval(model, epoch)
 
     def step(self, model, batch):
         
@@ -156,11 +157,11 @@ class Trainer(transformers.Trainer):
             f1_score_pos, f1_score_neg, macro_f1_score, acc = self.calculate_metrics(prediction_lst, label_lst)
             eval_loss /= len(self.test_dataset.batches)
 
-            self.writer.add_scalar('Eval/Loss', eval_loss, epoch)
-            self.writer.add_scalar('Eval/f1_pos', f1_score_pos, epoch)
-            self.writer.add_scalar('Eval/f1_neg', f1_score_neg, epoch)
-            self.writer.add_scalar('Eval/f1_macro', macro_f1_score, epoch)
-            self.writer.add_scalar('Eval/Acc', acc, epoch)
+            print('Eval/Loss', eval_loss, epoch)
+            print('Eval/f1_pos', f1_score_pos, epoch)
+            print('Eval/f1_neg', f1_score_neg, epoch)
+            print('Eval/f1_macro', macro_f1_score, epoch)
+            print('Eval/Acc', acc, epoch)
         
         model.train()
 
