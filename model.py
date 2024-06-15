@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from modules.BertBiGCN import BertBiGCN
+from modules.TimeAwareGCN import TimeAwareGCN
 from modules.TimeAwareEncoder import TimeAwareEncoder
 import os
         
@@ -58,7 +58,7 @@ class Roberta_Prototypical_BiGCN:
             relPosEncoder = None
             absTimeEncoder = None
 
-        self.BiGCN = BertBiGCN(config, relPosEncoder=relPosEncoder, absTimeEncoder=absTimeEncoder)
+        self.BiGCN = TimeAwareGCN(config, relPosEncoder=relPosEncoder, absTimeEncoder=absTimeEncoder)
     
     def responseRanking(self, feature, rootIndex, ranking_indices):
         if feature is None:

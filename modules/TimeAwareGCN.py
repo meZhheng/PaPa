@@ -6,7 +6,7 @@ from torch_geometric.nn import GCNConv
 from torch_geometric.data import Data
 import torch.nn.functional as F
 
-class BertBiGCN(nn.Module):
+class TimeAwareGCN(nn.Module):
     def __init__(self, config, relPosEncoder=None, absTimeEncoder=None):
         super().__init__()
         self.config = config
