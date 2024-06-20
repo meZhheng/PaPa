@@ -8,6 +8,8 @@ class Config():
 		self.logging_dir = './logs'
 		self.save_at_last = False
 
+		self.seed = 42
+
 		self.ablation = 'rm_soft'			# Optional[all, rm_soft, rm_hard, rm_prompt, rm_prop, rm_tae, rm_pro]
 
 		# GPU settings 
@@ -27,15 +29,15 @@ class Config():
 		self.train_aware_encoder = True
 
 		# Data paths
-		self.data_train = "data/Weibo" 		# Optional[Twitter15, Terrorist, Twitter, Weibo]
-		self.data_test = "data/WeiboCovid"	# Optional[Twitter16, Gossip, TwitterCovid, WeiboCovid]
+		self.data_train = "data/Twitter" 			# Optional[Twitter15, Terrorist, Twitter, Weibo]
+		self.data_test = "data/TwitterCovid"		# Optional[Twitter16, Gossip, TwitterCovid, WeiboCovid]
 		
 		# Model parameters settings
 		self.d_model = 768
 		self.dropout_rate = 0.3
 
 		# Learning rate
-		self.warmup_steps = 2485			# Optional[4885 for PHEME, 2485 for Weibo]
+		self.warmup_steps = 725					# Optional[4885 for PHEME, 2485 for Weibo, 725 for Twitter]
 		self.learning_rate = 1e-5
 		self.adam_beta1 = 0.90
 		self.adam_beta2 = 0.98
@@ -55,6 +57,12 @@ class Config():
 		self.gcn_hidden_dim = 768
 		self.gcn_dropout = 0.0
 		self.gcn_edge_dropout = 0.1
+
+		# label verbalizer
+		self.label_mapping = {
+			'0': 'confirm',
+			'1': 'rumor'
+		}
 		
 	def __repr__(self):
 		return str(vars(self))

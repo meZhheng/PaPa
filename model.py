@@ -67,13 +67,13 @@ class Roberta_Prototypical_BiGCN:
         tmp = []
         for i, root_idx in enumerate(rootIndex):
 
-            rank_ids = ranking_indices[i]
             if root_idx == rootIndex[-1]:
                 batch = feature[root_idx:]
             else:
                 batch = feature[root_idx:rootIndex[i+1]]
 
-            batch = torch.index_select(feature, dim=0, index=rank_ids.cuda())
+            rank_ids = ranking_indices[i]
+            batch = torch.index_select(batch, dim=0, index=rank_ids.cuda())
 
             tmp.append(batch)
         
@@ -185,7 +185,7 @@ class Roberta_Prototypical_BiGCN:
         propagation_mask = None
         learnable_emb = None
 
-        if self.mode == 'all':
+        if self.mode == 'all' or self.mode == 'rm_tae':
             propagation_emb = self.BiGCN(post_feature, edge_index_TD, edge_index_BU, roots, abs_time, rel_pos)
             learnable_emb = self.soft_prompt.weight
 
@@ -220,7 +220,10 @@ class Roberta_Prototypical_BiGCN:
         )
 
         sequence_output = output.last_hidden_state
-        mask_output = sequence_output[torch.arange(sequence_output.size(0)), self.mask_pos]
+        if self.mode == 'rm_hard':
+            mask_output = sequence_output[:, 0, :]
+        else:
+            mask_output = sequence_output[torch.arange(sequence_output.size(0)), self.mask_pos]
 
         # <------------- Prototypical Classifier ------------->
         if self.training:  # and self.cl_mode:

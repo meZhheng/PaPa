@@ -157,11 +157,11 @@ class Trainer(transformers.Trainer):
             f1_score_pos, f1_score_neg, macro_f1_score, acc = self.calculate_metrics(prediction_lst, label_lst)
             eval_loss /= len(self.test_dataset.batches)
 
-            print('Eval/Loss', eval_loss, epoch)
-            print('Eval/f1_pos', f1_score_pos, epoch)
-            print('Eval/f1_neg', f1_score_neg, epoch)
-            print('Eval/f1_macro', macro_f1_score, epoch)
-            print('Eval/Acc', acc, epoch)
+            self.writer.add_scalar('Eval/Loss', eval_loss, epoch)
+            self.writer.add_scalar('Eval/f1_pos', f1_score_pos, epoch)
+            self.writer.add_scalar('Eval/f1_neg', f1_score_neg, epoch)
+            self.writer.add_scalar('Eval/f1_macro', macro_f1_score, epoch)
+            self.writer.add_scalar('Eval/Acc', acc, epoch)
         
         model.train()
 

@@ -20,7 +20,7 @@ class PropDataset(Dataset):
             while 1:
                 try:
                     thread = pickle.load(f)
-                    if thread['post_feature'].shape[0] > 1024:
+                    if self.train and thread['post_feature'].shape[0] > 1024:
                         continue
                     self.threadDict[thread['id_']] = thread
                     if self.train:
@@ -47,8 +47,6 @@ class PropDataset(Dataset):
         self.top_k = top_k
         
         self.get_template()
-
-        random.seed(42)
 
     def create_batches(self, thread_id, batch_size):
 
@@ -192,6 +190,6 @@ class PropDataset(Dataset):
         if self.train:
             maxCount = max(len(self.thread_true), len(self.thread_false))
 
-            return maxCount // self.batch_size + 1
+            return maxCount // self.batch_size + + int((maxCount % self.batch_size) != 0)
         else:
-            return len(self.thread_id) // self.batch_size + 1
+            return len(self.thread_id) // self.batch_size + int((len(self.thread_id) % self.batch_size) != 0)

@@ -1,15 +1,12 @@
 from transformers import RobertaConfig,  AutoTokenizer
-from transformers import TrainingArguments, GlueDataTrainingArguments
-from transformers import HfArgumentParser
 from transformers import set_seed
 
 from dataloader import PropDataset
 
-from dataclasses import dataclass, field
-
 import torch.nn as nn
 import torch
 import os
+import random
 
 from model import RobertaPromptTuningLM
 from trainer import Trainer
@@ -58,7 +55,8 @@ if __name__ == '__main__':
     config = Config()
     os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(str(gpu) for gpu in vars(config)["gpu_idx"])
 
-    set_seed(42)
-    torch.manual_seed(42)
+    set_seed(config.seed)
+    torch.manual_seed(config.seed)
+    random.seed(config.seed)
 
     main(config)

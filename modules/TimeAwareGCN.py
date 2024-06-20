@@ -113,7 +113,6 @@ class GCN(torch.nn.Module):
         rootIndex = torch.cat((rootIndex, root_index), dim=0)
 
         postRoot = self.rootEnhancement(rootIndex, posts)
-
         conv1Out = self.conv1(posts, edge_index)
         conv1Root = self.rootEnhancement(rootIndex, conv1Out)
 
